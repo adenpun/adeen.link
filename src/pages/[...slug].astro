@@ -1,7 +1,7 @@
 ---
 import { getRedirect } from "../db";
 
-const redirect = await getRedirect(Astro.params.slug);
+const redirect = await getRedirect(Astro.params.slug!);
 if (redirect) return Astro.redirect(redirect);
 return new Response(null, { status: 404 });
 ---

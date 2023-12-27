@@ -1,6 +1,6 @@
 ---
 import { deleteRedirect, editRedirect, getRedirect } from "../../../db";
-const from = Astro.params.from;
+const from = Astro.params.from!;
 
 if (Astro.request.method === "POST") {
   const formData = await Astro.request.formData();
