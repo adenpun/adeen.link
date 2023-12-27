@@ -1,0 +1,8 @@
+---
+if (Astro.request.method === "POST") {
+  Astro.cookies.delete("session", {
+    path: "/",
+  });
+}
+return Astro.redirect("/");
+---

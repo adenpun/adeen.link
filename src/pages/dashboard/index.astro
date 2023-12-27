@@ -1,0 +1,30 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { listRedirects } from "../../db";
+
+const session = Astro.cookies.get("session")?.value;
+if (!session) return Astro.redirect("/dashboard/login/");
+
+const redirects = await listRedirects(session);
+---
+
+<Layout>
+  <h2>Your redirects</h2>
+  <ul>
+    {
+      redirects.map((redirect) => (
+        <li>
+          {redirect.from} &rarr; {redirect.to} <a href={`/dashboard/redirect/${redirect.from}`}>Edit</a>
+        </li>
+      ))
+    }
+  </ul>
+  <h2>Links</h2>
+  <ul>
+    <li><a href="/dashboard/new/">New redirect</a></li>
+    <li><a href="/dashboard/change-password/">Change password</a></li>
+  </ul>
+  <form method="POST" action="/dashboard/logout/">
+    <button type="submit">Logout</button>
+  </form>
+</Layout>

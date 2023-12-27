@@ -1,0 +1,25 @@
+---
+import { newRedirect } from "../../db";
+
+const session = Astro.cookies.get("session")?.value;
+
+if (!session) return Astro.redirect("/");
+
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  const from = formData.get("from") as string;
+  const to = formData.get("to") as string;
+
+  await newRedirect(from, to, session);
+
+  return Astro.redirect("/dashboard/");
+}
+---
+
+<form method="POST">
+  <label for="from">From</label>
+  <input type="text" name="from" id="from" />
+  <label for="to">to</label>
+  <input type="text" name="to" id="to" />
+  <button type="submit">Create</button>
+</form>

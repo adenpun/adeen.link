@@ -1,0 +1,30 @@
+---
+import { deleteRedirect, editRedirect, getRedirect } from "../../../db";
+const from = Astro.params.from;
+
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  const isEdit = formData.get("edit") !== null;
+  if (isEdit) {
+    const to = formData.get("to") as string;
+    await editRedirect(from, to);
+    return Astro.redirect("/dashboard/");
+  } else {
+    await deleteRedirect(from);
+    return Astro.redirect("/dashboard/");
+  }
+}
+
+const to = (await getRedirect(from))!;
+---
+
+<a href="/dashboard/">Dashboard</a>
+
+<form method="POST">
+  <label for="from">From</label>
+  <input type="text" name="from" id="from" value={from} readonly />
+  <label for="to">to</label>
+  <input type="text" name="to" id="to" value={to} />
+  <button type="submit" name="edit">Edit</button>
+  <button type="submit" name="delete">Delete</button>
+</form>
