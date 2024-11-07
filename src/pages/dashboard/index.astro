@@ -1,30 +1,66 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { listRedirects } from "../../db";
+import { listRedirects, listClipboards } from "../../db";
 
 const session = Astro.cookies.get("session")?.value;
 if (!session) return Astro.redirect("/dashboard/login/");
 
 const redirects = await listRedirects(session);
+const clipboards = await listClipboards(session);
 ---
 
 <Layout>
-  <h2>Your redirects</h2>
-  <ul>
-    {
-      redirects.map((redirect) => (
-        <li>
-          {redirect.from} &rarr; {redirect.to} <a href={`/dashboard/redirect/${redirect.from}`}>Edit</a>
-        </li>
-      ))
-    }
-  </ul>
-  <h2>Links</h2>
-  <ul>
-    <li><a href="/dashboard/new/">New redirect</a></li>
-    <li><a href="/dashboard/change-password/">Change password</a></li>
-  </ul>
-  <form method="POST" action="/dashboard/logout/">
-    <button type="submit">Logout</button>
-  </form>
+  <section class="p-5">
+    <h2 class="text-3xl">New redirect</h2>
+    <form action="/dashboard/new/" method="POST" enctype="multipart/form-data">
+      <input type="text" placeholder="From" name="from" class="border-2 p-2" /> &rArr; <input type="text" placeholder="To" name="to" class="border-2 p-2" />
+      <button type="submit" class="bg-black p-2 text-white hover:bg-white hover:text-black">Create</button>
+    </form>
+  </section>
+  <section class="p-5">
+    <h2 class="text-3xl">New clipboard</h2>
+    <form action="/dashboard/new-clipboard/" method="POST" enctype="multipart/form-data">
+      <input type="text" placeholder="From" name="from" class="border-2 p-2" /> &rArr; <input type="text" placeholder="To" name="to" class="border-2 p-2" />
+      <button type="submit" class="bg-black p-2 text-white hover:bg-white hover:text-black">Create</button>
+    </form>
+  </section>
+  <section class="p-5">
+    <h2 class="text-3xl">Your redirects</h2>
+    <ul>
+      {
+        redirects.map((redirect) => (
+          <li class="p-2 hover:bg-neutral-100">
+            {redirect.from} &rarr; {redirect.to}{" "}
+            <a href={`/dashboard/redirect/${redirect.from}`} class="text-blue-600">
+              Edit
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+  <section class="p-5">
+    <h2 class="text-3xl">Your clipboards</h2>
+    <ul>
+      {
+        clipboards.map((clipboard) => (
+          <li class="p-2 hover:bg-neutral-100">
+            {clipboard.id} &rarr; {clipboard.content}{" "}
+            <a href={`/dashboard/clipboard/${clipboard.id}`} class="text-blue-600">
+              Edit
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+  <section class="p-5">
+    <h2 class="text-3xl">Links</h2>
+    <ul class="text-blue-600">
+      <li><a href="/dashboard/change-password/">Change password</a></li>
+    </ul>
+    <form method="POST" action="/dashboard/logout/">
+      <button type="submit">Logout</button>
+    </form>
+  </section>
 </Layout>

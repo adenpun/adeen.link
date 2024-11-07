@@ -19,11 +19,11 @@ if (Astro.request.method === "POST") {
 ---
 
 <Layout>
-  <form method="POST">
-    <label for="username">Username</label>
-    <input type="text" name="username" id="username" />
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" />
-    <button type="submit">Login</button>
+  <form method="POST" class="inline-flex flex-col gap-2 p-5">
+    <label for="username" class="text-xl">Username</label>
+    <input type="text" name="username" id="username" class="border-2 p-2" />
+    <label for="password" class="text-xl">Password</label>
+    <input type="password" name="password" id="password" class="border-2 p-2" />
+    <button type="submit" class="bg-black p-2 text-white hover:bg-white hover:text-black">Login</button>
   </form>
 </Layout>

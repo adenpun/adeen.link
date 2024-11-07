@@ -9,6 +9,7 @@ await client.connect();
 const db = client.db("db");
 const users = db.collection("users");
 const redirects = db.collection("redirects");
+const clipboards = db.collection("clipboards");
 
 export async function newRedirect(from: string, to: string, belongsTo: string) {
   const user = (await users.findOne({ session: belongsTo }))?._id!;
@@ -31,6 +32,29 @@ export async function editRedirect(from: string, to: string) {
 
 export async function deleteRedirect(from: string) {
   await redirects.deleteOne({ from });
+}
+
+export async function newClipboard(id: string, content: string, belongsTo: string) {
+  const user = (await users.findOne({ session: belongsTo }))?._id!;
+  await clipboards.insertOne({
+    id: id,
+    content,
+    belongsTo: user,
+  });
+}
+
+export async function getClipboard(id: string) {
+  const clipboard = await clipboards.findOne({ id });
+  if (clipboard === null) return null;
+  return clipboard.content as string;
+}
+
+export async function editClipboard(id: string, content: string) {
+  await clipboards.updateOne({ id }, { $set: { content } });
+}
+
+export async function deleteClipboard(id: string) {
+  await clipboards.deleteOne({ id: id });
 }
 
 export async function newUser(username: string, password: string) {
@@ -79,4 +103,10 @@ export async function listRedirects(session: string) {
   const user = await users.findOne({ session });
   if (user === null) return [];
   return await redirects.find({ belongsTo: user._id }).sort({ from: 1 }).toArray();
+}
+
+export async function listClipboards(session: string) {
+  const user = await users.findOne({ session });
+  if (user === null) return [];
+  return await clipboards.find({ belongsTo: user._id }).sort({ id: 1 }).toArray();
 }

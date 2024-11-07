@@ -1,7 +1,13 @@
 ---
-import { getRedirect } from "../db";
+import { getClipboard, getRedirect } from "../db";
 
-const redirect = await getRedirect(Astro.params.slug!);
-if (redirect) return Astro.redirect(redirect);
-return new Response(null, { status: 404 });
+if (!Astro.params.slug) return new Response(null, { status: 404 });
+const redirect_url = await getRedirect(Astro.params.slug);
+const clipboard = await getClipboard(Astro.params.slug);
+if (redirect_url) return redirect(redirect_url);
+if (!clipboard) return new Response(null, { status: 404 });
 ---
+
+<script define:vars={{ clipboard }}>
+  navigator.clipboard.writeText(clipboard);
+</script>

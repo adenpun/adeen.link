@@ -4,8 +4,15 @@
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>adeen.link</title>
+    <style is:global>
+      @tailwind base;
+      @tailwind components;
+      @tailwind utilities;
+    </style>
   </head>
   <body>
-    <slot />
+    <main>
+      <slot />
+    </main>
   </body>
 </html>

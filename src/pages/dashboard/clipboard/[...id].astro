@@ -1,6 +1,6 @@
 ---
-import { deleteRedirect, editRedirect, getRedirect } from "../../../db";
-const from = Astro.params.from!;
+import { deleteClipboard, editClipboard, getClipboard } from "../../../db";
+const from = Astro.params.id!;
 
 if (Astro.request.method === "POST") {
   const formData = await Astro.request.formData();
@@ -8,15 +8,15 @@ if (Astro.request.method === "POST") {
 
   if (isEdit) {
     const to = formData.get("to") as string;
-    await editRedirect(from, to);
+    await editClipboard(from, to);
     return Astro.redirect("/dashboard/");
   } else {
-    await deleteRedirect(from);
+    await deleteClipboard(from);
     return Astro.redirect("/dashboard/");
   }
 }
 
-const to = (await getRedirect(from))!;
+const to = (await getClipboard(from))!;
 ---
 
 <a href="/dashboard/">Dashboard</a>
